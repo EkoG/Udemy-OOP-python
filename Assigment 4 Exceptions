@@ -28,7 +28,7 @@ class ConfigDict(dict):
 
 
 class ConfigKeyError (Exception):
-    def __init__(self, keys, key):
+    def __init__(self, keys, key): #important keys must be first to get all the keys from .txt
         self.key = key
         self.keys = keys.keys()
 
