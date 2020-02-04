@@ -1,0 +1,46 @@
+import datetime
+
+class WriteFile(object):
+
+    def __init__(self, name, writer):
+        self.fh = open(name, 'w')
+        self.writerclass = writer()
+
+    def write(self, text):
+        self.fh.write(self.writerclass.writer_format(text))
+        self.fh.write('\n')
+    def close(self):
+        self.fh.close()
+
+
+class LogFile(object):
+    def writer_format(self, message):
+        dt_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+        return '{0} {1}'.format(dt_str, message)
+
+
+class Delim(object):
+    def __init__(self):
+        self.delimiter = ","
+
+    def writer_format(self, the_list):
+        the_list_return = []
+        for item in the_list:
+            if self.delimiter in item:
+                the_list_return.append('"{0}"'.format(item))
+            else:
+                the_list_return.append(item)
+        return self.delimiter.join(the_list_return)
+
+
+log = WriteFile('log.txt', LogFile)                  # passes the filename to write to
+csv = WriteFile('text2.csv', Delim)                  # passes the filename to write to
+
+log.write('this is a log message')        # writes a message to the file
+log.write('this is another log message')  # same
+
+csv.write(['a,9', 'b', 'c', 'd'])       # writes a list of values separated                                    # by comma to the file
+csv.write(['1', '2', '3,8', '4'])
+
+log.close()
+csv.close()
